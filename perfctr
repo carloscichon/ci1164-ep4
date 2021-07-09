@@ -9,7 +9,7 @@
 #         perfctr 3 FLOPS_DP ./matmult -n 64
 #
 
-LIKWID_CMD="likwid-perfctr -C $1 -g $2 -m -c"
+LIKWID_CMD="likwid-perfctr -C $1 -g $2 -m"
 shift 2
 
 ${LIKWID_CMD} $*
