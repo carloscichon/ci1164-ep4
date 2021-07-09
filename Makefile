@@ -3,13 +3,13 @@
            CC = gcc -std=c11 -g
          OBJS = matriz.o
 
-       CFLAGS =  
-       LFLAGS = -lm
+       CFLAGS = -DLIKWID_PERFMON
+       LFLAGS = -lm -llikwid
 
 .PHONY: all debug clean limpa purge faxina
 
 %.o: %.c %.h
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c -O3 -mavx2 -march=native  $<
 
 all: $(PROG)
 

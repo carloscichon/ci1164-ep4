@@ -2,7 +2,8 @@
 #include <stdlib.h>    /* exit, malloc, calloc, etc. */
 #include <string.h>
 #include <getopt.h>    /* getopt */
-
+#include <likwid.h>
+#include <likwid-marker.h>
 #include "matriz.h"
 
 /**
@@ -73,13 +74,26 @@ int main (int argc, char *argv[])
     printf ("=================================\n\n");
 #endif /* DEBUG */
 
+  LIKWID_MARKER_INIT;
+
+  LIKWID_MARKER_START("MatPrtVet");
   multMatPtrVet (mPtr_1, vet, n, n, resPtr);
-    
+  LIKWID_MARKER_STOP("MatPrtVet");
+
+
+  LIKWID_MARKER_START("MatRowVet");
   multMatRowVet (mRow_1, vet, n, n, resRow);
+  LIKWID_MARKER_STOP("MatRowVet");
     
+  LIKWID_MARKER_START("MatMatPtr");
   multMatMatPtr (mPtr_1, mPtr_2, n, resMatPtr);
-    
+  LIKWID_MARKER_STOP("MatMatPtr");
+  
+  LIKWID_MARKER_START("MatMatRow");
   multMatMatRow (mRow_1, mRow_2, n, resMatRow);
+  LIKWID_MARKER_STOP("MatMatRow");
+
+  LIKWID_MARKER_CLOSE;
     
 #ifdef DEBUG
     prnVetor (resPtr, n);
