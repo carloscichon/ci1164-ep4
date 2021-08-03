@@ -188,6 +188,37 @@ void multMatRowVet (MatRow mat, Vetor v, int m, int n, Vetor res)
   }
 }
 
+/**
+ *  Funcao multMatRowVet:  Efetua multiplicacao otimizada entre matriz 'mxn' por vetor. A otimização está na implementação do loop unroling & Jam
+ *                       de 'n' elementos
+ *  Otimização: Loop unroling & Jam
+ *  @param mat matriz 'mxn'
+ *  @param m número de linhas da matriz
+ *  @param n número de colunas da matriz
+ *  @param res vetor que guarda o resultado. Deve estar previamente alocado e com
+ *             seus elementos inicializados em 0.0 (zero)
+ *  @return vetor de 'm' elementos
+ *
+ */
+
+void multMatRowVet_otimiz (MatRow mat, Vetor v, int m, int n, Vetor res)
+{
+  unsigned int stride = 4;
+  /* Efetua a multiplicação */
+  if (res) {
+    for (int i=0; i < m-(m%stride); i+=stride)
+      for (int j=0; j < n; ++j){
+        res[i] += mat[m*i + j] * v[j];
+        res[i+1] += mat[m*(i+1) + j] * v[j];
+        res[i+2] += mat[m*(i+2) + j] * v[j];
+        res[i+3] += mat[m*(i+3) + j] * v[j];
+      }
+    for(int i = m-(m%stride); i < m; ++i)
+      for (int j = 0; j < n; ++j)
+        res[i] += mat[m*i + j] * v[j];
+  }
+}
+
 
 /**
  *  Funcao multMatMatPtr: Efetua multiplicacao de duas matrizes 'n x n' 
@@ -228,6 +259,48 @@ void multMatMatRow (MatRow A, MatRow B, int n, MatRow C)
     for (int j=0; j < n; ++j)
       for (int k=0; k < n; ++k)
 	C[i*n+j] += A[i*n+k] * B[k*n+j];
+}
+
+/**
+ *  Funcao multMatMatPtr: Efetua multiplicacao de duas matrizes 'n x n'. A otimização está na implementação do Loop Unroling & Jam e na técnica de blocking.
+ *  @param A matriz 'n x n'
+ *  @param B matriz 'n x n'
+ *  @param n ordem da matriz quadrada
+ *  @param C   matriz que guarda o resultado. Deve ser previamente gerada com 'geraMatPtr()'
+ *             e com seus elementos inicializados em 0.0 (zero)
+ *
+ */
+void multMatMatRow_otimiz (MatRow A, MatRow B, int n, MatRow C)
+{
+  unsigned int stride = 4;
+  unsigned int block = 4;
+  unsigned int istart, iend;
+  unsigned int jstart, jend;
+  unsigned int kstart, kend;
+  /* Efetua a multiplicação */
+  for (int ii = 0; ii < n/block; ++ii){
+    istart=ii*block; 
+    iend=istart+block;
+    for (int jj = 0; jj < n/block; ++jj){
+      jstart=jj*block; 
+      jend=jstart+block;
+      for (int kk = 0; kk < n/block; ++kk){
+        kstart=kk*block; 
+        kend=kstart+block;
+        for (int i=istart; i < iend; ++i){
+          for (int j=jstart; j < jend; j+=stride){
+            for (int k=kstart; k < kend; ++k){
+              C[i*n+j] += A[i*n+k] * B[k*n+j];
+              C[i*n+(j+1)] += A[i*n+k] * B[k*n+(j+1)];
+              C[i*n+(j+2)] += A[i*n+k] * B[k*n+(j+2)];
+              C[i*n+(j+3)] += A[i*n+k] * B[k*n+(j+3)];
+              
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 

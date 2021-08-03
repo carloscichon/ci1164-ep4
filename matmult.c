@@ -31,8 +31,8 @@ int main (int argc, char *argv[])
   int c, n=DEF_SIZE;
   
   MatPtr mPtr_1, mPtr_2, resMatPtr;
-  MatRow mRow_1, mRow_2, resMatRow;
-  Vetor vet, resPtr, resRow;
+  MatRow mRow_1, mRow_2, resMatRow, resMatRow_otimiz;
+  Vetor vet, resPtr, resRow, resRow_otimiz;
   
   /* =============== TRATAMENTO DE LINHA DE COMANDO =============== */
 
@@ -54,8 +54,10 @@ int main (int argc, char *argv[])
       
   resPtr = (double *) calloc (n, sizeof(double));
   resRow = (double *) calloc (n, sizeof(double));
+  resRow_otimiz = (double *) calloc (n, sizeof(double));
   resMatPtr = geraMatPtr(n, n, 1);
   resMatRow = geraMatRow(n, n, 1);
+  resMatRow_otimiz = geraMatRow(n, n, 1);
     
   mPtr_1 = geraMatPtr (n, n, 0);
   mPtr_2 = geraMatPtr (n, n, 0);
@@ -76,22 +78,22 @@ int main (int argc, char *argv[])
 
   LIKWID_MARKER_INIT;
 
-  LIKWID_MARKER_START("MatPrtVet");
-  multMatPtrVet (mPtr_1, vet, n, n, resPtr);
-  LIKWID_MARKER_STOP("MatPrtVet");
-
-
   LIKWID_MARKER_START("MatRowVet");
   multMatRowVet (mRow_1, vet, n, n, resRow);
   LIKWID_MARKER_STOP("MatRowVet");
+
+  LIKWID_MARKER_START("MatRowVetOtimiz");
+  multMatRowVet_otimiz (mRow_1, vet, n, n, resRow_otimiz);
+  LIKWID_MARKER_STOP("MatRowVetOtimiz");
     
-  LIKWID_MARKER_START("MatMatPtr");
-  multMatMatPtr (mPtr_1, mPtr_2, n, resMatPtr);
-  LIKWID_MARKER_STOP("MatMatPtr");
-  
   LIKWID_MARKER_START("MatMatRow");
   multMatMatRow (mRow_1, mRow_2, n, resMatRow);
   LIKWID_MARKER_STOP("MatMatRow");
+
+  LIKWID_MARKER_START("MatMatRowOtimiz");
+  multMatMatRow_otimiz (mRow_1, mRow_2, n, resMatRow_otimiz);
+  LIKWID_MARKER_STOP("MatMatRowOtimiz");
+
 
   LIKWID_MARKER_CLOSE;
     

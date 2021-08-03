@@ -1,6 +1,6 @@
 #!/bin/bash
-#TAMANHOS="64 100 128 2000 2048"
-TAMANHOS="128"
+#TAMANHOS="3000"
+TAMANHOS="64 100 128 1000 1024 2000 2048 3000 4096 5000"
 
 TESTES="L3 L2CACHE FLOPS_DP"
 TAM2="1 2 3 4"
@@ -18,13 +18,13 @@ for teste in $TESTES; do
             i=$((0))
             while read line; do
                 if (( $i % 4 == 0 )); then
-                    echo "$tam | $line" >> RUNTIME_multMatPtrVet.txt                
+                    echo -n "$tam | $line" >> RUNTIME_multMatRowVet.txt                
                 elif (( $i % 4 == 1 )); then
-                    echo "$tam | $line" >> RUNTIME_multMatRowVet.txt
+                    echo " | $line" >> RUNTIME_multMatRowVet.txt
                 elif (( $i % 4 == 2 )); then
-                    echo "$tam | $line" >> RUNTIME_multMatMatPtr.txt
+                    echo -n "$tam | $line" >> RUNTIME_multMatMatRow.txt
                 elif (( $i % 4 == 3 )); then
-                    echo "$tam | $line" >> RUNTIME_multMatMatRow.txt
+                    echo " | $line" >> RUNTIME_multMatMatRow.txt
                 fi
                 i=$((i+1))
             done < RUNTIME_"$tam".txt
@@ -48,13 +48,13 @@ for teste in $TESTES; do
         i=$((0))
         while read line; do
             if (( $i % 4 == 0 )); then
-                echo "$tam | $line" >> "$teste"_multMatPtrVet.txt                
+                echo -n "$tam | $line" >> "$teste"_multMatRowVet.txt                
             elif (( $i % 4 == 1 )); then
-                echo "$tam | $line" >> "$teste"_multMatRowVet.txt
+                echo " | $line" >> "$teste"_multMatRowVet.txt
             elif (( $i % 4 == 2 )); then
-                echo "$tam | $line" >> "$teste"_multMatMatPtr.txt
+                echo -n "$tam | $line" >> "$teste"_multMatMatRow.txt
             elif (( $i % 4 == 3 )); then
-                echo "$tam | $line" >> "$teste"_multMatMatRow.txt
+                echo " | $line" >> "$teste"_multMatMatRow.txt
             fi
             i=$((i+1))
         done < "$teste"_"$tam".txt
@@ -62,7 +62,4 @@ for teste in $TESTES; do
         rm "$teste"_"$tam".txt
         rm tmp.txt
     done
-
-    
 done
-
